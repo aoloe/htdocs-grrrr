@@ -36,7 +36,7 @@ GrrMap = {
             });
             var marker = L.marker(e.latlng, {icon: crossIcon});
             marker.addTo(this.map);
-        });
+        }.bind(this));
 
         L.tileLayer.blackAndWhite(
             osmUrl,
@@ -121,7 +121,7 @@ GrrMap = {
      */
     addMarkers: function(markersSource) {
 
-        markers = L.markerClusterGroup({
+        var markers = L.markerClusterGroup({
             disableClusteringAtZoom:12, // grrrr default zoom - 2
             maxClusterRadius: 40, // cluster default / 2
             /* zoomToBoundsOnClick: false, */
@@ -180,7 +180,7 @@ GrrMap = {
      * show the image attached to marker
      */
 	show: function(image) {
-        console.log('image', image);
+        // console.log('image', image);
 		var grrimage="url("+image+")";
 		document.getElementById('bild').style.backgroundImage=grrimage;
 		document.getElementById('bild').style.visibility='visible';

@@ -60,12 +60,12 @@ html, body, #map, #bild{
 }
 
 a.leaflet-control-zoom-in {
-    background-image: url(../../../grr/grrrr_plus.png);
+    background-image: url(../../grr/grrrr_plus.png);
     margin-bottom: 0px;
     color:transparent;
 }
 a.leaflet-control-zoom-out {
-    background-image: url(../../../grr/grrrr_minusn.png);
+    background-image: url(../../grr/grrrr_minusn.png);
     color:transparent;
 }
 a.leaflet-control-zoom-in:hover,
@@ -79,7 +79,7 @@ a.leaflet-control-zoom-out:hover {
 }
 
 .leaflet-popup-close-button {
-    background: white url(../grr/grrrr__kreuz2.png);
+    background: white url(../../grr/grrrr__kreuz2.png);
 }
 
 /** the markers clustered icon */
