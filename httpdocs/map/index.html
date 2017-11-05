@@ -1,0 +1,35 @@
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <title>Grrrr</title>
+    <link rel="icon" href="../grr/grrrr_fuss.png" type="image/png">
+    <link rel="stylesheet" href="/map/css/leaflet.css" />
+    <link rel="stylesheet" href="/map/css/MarkerCluster.css">
+    <link rel="stylesheet" href="/map/css/map.css">
+<!--
+    <script src="orte.js"></script>
+-->
+    <style>
+    </style>
+</head>
+<body>
+    <div id="grrlogos" style="position:absolute; top:0px; left:0px; z-index:1000;"><a href="../index.html"><img id="grrrrnet" src="../grr/grrrrnetn.png" border="0" alt="GRRRRnet"></a><img SRC="../grr/grrrr_flugi.png" border="0"></div>
+
+    <div id="map"></div>
+    <div id="bild" style="z-index:1000;" onclick="GrrMap.hide(); return false;"></div>
+	<script src="/map/js/leaflet.js"></script>
+    <script src="/map/js/TileLayer.BlackAndWhite.js"></script>
+	<script src="/map/js/leaflet.markercluster.js"></script>
+    <script src="/map/js/map.js"></script>
+    <script>
+        // GrrMap.init();
+        GrrMap.init(47.397060, 8.488165, 14); // tüffenwies
+        // GrrMap.init(47.397060, 8.488165, 10); // tüffenwies
+        GrrMap.readMarkers('orte.json');
+        
+        // GrrMap.init('51.5074', '0.1278',12); // london
+        // GrrMap.init('41° 2’ 17.88” N', '28° 59’ 14.832” O', 12) // güzel park
+        // GrrMap.init("51° 30' 35.5140'' N", "0° 7' 5.1312'' W", 12); // london
+    </script>
+</body>
+</html>

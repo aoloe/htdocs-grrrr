@@ -1,0 +1,97 @@
+html, body, #map, #bild{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+#bild {
+    visibility:hidden;
+    padding:0px;
+    position:absolute;
+    top:0px;
+    left:0px;
+    background-repeat:no-repeat;
+    background-position:center center;
+
+    /* always fit screen! */
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+
+}
+.leaflet-container a {
+    color: black;
+}
+
+.leaflet-tile {
+    /* visibility: hidden; */
+}
+.leaflet-tile-invisible {
+    visibility: hidden;
+}
+.leaflet-tile-visible {
+    visibility: visible;
+}
+
+/** style, resize and place the zoom buttons */
+.leaflet-left .leaflet-control {
+    margin-left: 0px;
+}
+
+.leaflet-top .leaflet-control {
+    margin-top: 19px;
+}
+
+
+.leaflet-bar.leaflet-control {
+    border:none;
+    border-radius:0px;
+}
+
+.leaflet-zoom-box {
+    border: 0px dotted #05f;
+    background: none;
+    opacity: 0.0;
+}
+
+.leaflet-touch .leaflet-bar a {
+    width: 38px;
+    height: 38px;
+}
+
+a.leaflet-control-zoom-in {
+    background-image: url(../../../grr/grrrr_plus.png);
+    margin-bottom: 0px;
+    color:transparent;
+}
+a.leaflet-control-zoom-out {
+    background-image: url(../../../grr/grrrr_minusn.png);
+    color:transparent;
+}
+a.leaflet-control-zoom-in:hover,
+a.leaflet-control-zoom-out:hover {
+    color:transparent;
+}
+
+/** is this still in use? */
+.leaflet-popup-content {
+    font: 12px/1.4 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.leaflet-popup-close-button {
+    background: white url(../grr/grrrr__kreuz2.png);
+}
+
+/** the markers clustered icon */
+div.grrrr-clustered {
+    background-color:white;
+    min-width:20px;
+    min-height:20px;
+    text-align:center;
+    vertical-align:middle;
+    height:20px;
+    width:20px;
+    /* https://stackoverflow.com/a/37991097/5239250 */
+    background-image: linear-gradient(45deg, #000 25%, transparent 25%, transparent 50%, #000 50%, #000 75%, transparent 75%, #fff);
+    background-size: 5px 5px;
+}
