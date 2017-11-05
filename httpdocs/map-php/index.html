@@ -1,0 +1,196 @@
+<html>
+<head>
+<link REL="icon" HREF="../grr/grrrr_fuss.png" TYPE="image/png">
+<link rel="stylesheet" href="../map/leaflet.css" />
+<style>
+    html, body, #map, #bild{
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+    #bild {
+        visibility:hidden;
+        padding:0px;
+        position:absolute;
+        top:0px;
+        left:0px;
+        background-repeat:no-repeat;
+        background-position:center center;
+
+	    /* always fit screen! */
+	    -webkit-background-size: contain;
+	    -moz-background-size: contain;
+	    -o-background-size: contain;
+	    background-size: contain;
+
+    }
+    /*
+       for safari and chrome needs js + canvas effect:
+        http://www.ajaxblender.com/article-sources/jquery/convert-image-grayscale/index.html
+    .leaflet-tile {
+        filter: url(../map/resources.svg#desaturate);
+    }
+    */
+    .leaflet-container a {
+        color: black;
+    }
+</style>
+<!--[if IE]>
+<style>
+      /*
+      .leaflet-tile {
+          /* Filter: Gray; */
+          filter: progid:DXImageTransform.Microsoft.BasicImage(grayScale=1)';
+      }
+      */
+
+</style>
+<![endif]-->
+<script src="../map/leaflet.js"></script>
+<script src="../map/orte.js"></script>
+<script src="orte.js"></script>
+<script>
+// a good example, with dynamic loading of markers http://leaflet.raggedred.net/toadmap.htm
+function init() {
+  // initialise the map
+
+  var map = new L.Map('map');
+  /* we don't use the filters for now: no chance to get just black and white... */
+  if ( /* (typeof(document.getElementById('grrrrnet').style.filter) == "undefined") && */ (self.location.href.substr(0, 8) != 'file:///')) {
+      // var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      var osmUrl = '../map/tile.php?s={s}&z={z}&x={x}&y={y}&g=50'; // g = 1 - 254; 0 = graustufe
+  } else {
+    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  }
+//  var osmUrl = '../map/tile.php?s={s}&z={z}&x={x}&y={y}&g=50'; // g = 1 - 254; 0 = graustufe
+  var osmAttrib='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> &mdash; js+dhtml <a href="http://ideale.ch">a.l.e</a>';
+  osm = new L.TileLayer(osmUrl, {maxZoom: 18, minZoom: 4, attribution: osmAttrib})
+  map.setView(new L.LatLng(-35, 140), 3).addLayer(osm);
+
+  map.locate(); // will ask the current location...
+
+  map.on('locationfound', onLocationFound);
+  function onLocationFound(e) {
+      var OrtIcon = L.Icon({
+          iconUrl: '../grr/grrrr_kreuzblink.gif',
+          shadowUrl: '../grr/grrrr_kreuzblink.gif',
+          iconSize: new L.Point(19, 19),
+          shadowSize: new L.Point(0, 0),
+          iconAnchor: new L.Point(10, 10),
+          popupAnchor: new L.Point(-10, -10)
+      });
+      var crossIcon = new OrtIcon();
+      var marker = new L.Marker(e.latlng, {icon: crossIcon});
+      // map.addLayer(marker);
+      marker.addTo(map);
+  }
+
+  // initialise the dots
+  var DotIcon1 = L.icon({
+      iconUrl: '../map/grrrr_da_h.png',
+      shadowUrl: '../map/grrrr_da_h.png',
+      iconSize: new L.Point(25, 25),
+      shadowSize: new L.Point(0, 0),
+      iconAnchor: new L.Point(0, 25),
+      popupAnchor: new L.Point(0, 0)
+  });
+
+  var DotIcon2 = L.icon({
+      iconUrl: '../map/grrrr_da_v.png',
+      shadowUrl: '../map/grrrr_da_v.png',
+      iconSize: new L.Point(25, 25),
+      shadowSize: new L.Point(0, 0),
+      iconAnchor: new L.Point(0, 25),
+      popupAnchor: new L.Point(0, 0)
+  });
+
+  blinkDot = [
+    DotIcon1,
+    DotIcon2
+  ];
+  
+  // initialise the markers
+  var markers = [];
+  if (typeof(markers_global) != "undefined") {
+    markers = markers.concat(markers_global);
+  }
+  if (typeof(markers_local) != "undefined") {
+    markers = markers.concat(markers_local);
+  }
+
+  // add  the markers
+  for (var i=0; i<markers.length; i++) {
+    
+    var lon = markers[i][0];
+    var lat = markers[i][1];
+    var url = markers[i][2];
+    var grr = markers[i][3];
+    var marker;
+    if (grr == 0) {
+        marker = new L.Marker(new L.LatLng(lat, lon), {icon: ( blinkDot[i%2]) });
+    } else if (!((typeof(orte_ignorieren) != "undefined") && (orte_ignorieren.indexOf(grr) != -1))) {
+			var width = markers[i][4];
+			var GrrIcon = L.icon({
+					iconUrl: '../grr/grr'+grr+'n.png',
+					shadowUrl: '../grr/grr'+grr+'n.png',
+					iconSize: new L.Point(width, 19),
+					shadowSize: new L.Point(0, 0),
+					iconAnchor: new L.Point(width/2, 10),
+					popupAnchor: new L.Point(0, 0)
+			});
+            // console.log('../grr/grr'+grr+'n.png');
+
+			grrIconN = GrrIcon;
+			// marker = new L.Marker(new L.LatLng(lat, lon), {icon: grrIconN });
+			marker = new L.Marker([lat, lon], {icon: grrIconN });
+		}
+		marker.data = markers[i];
+		marker.on('click', markerclick);
+		// map.addLayer(marker); // TODO: this line is wrong with the new version of leaflet
+		marker.addTo(map);
+  }
+  // callback for the clicks on the markers
+  function markerclick(e) {
+    // alert(actions.length);
+    // alert(actions.toSource());
+    /*
+    for (var i=0; i < actions.length; i++) {
+      alert(actions[i].toSource());
+    }
+    */
+		// alert(e.target.data.toSource());
+		if (e.target.data[3] == 0) {
+			show(e.target.data[2]);
+		} else {
+			document.location = e.target.data[2];
+		}
+  }
+
+}
+
+
+var actions = [];
+
+// actions for the markers
+function show(image) {
+    grrimage="url("+image+")";
+    document.getElementById('bild').style.backgroundImage=grrimage;
+    document.getElementById('bild').style.visibility='visible';
+    // document.getElementById('map').style.visibility='hidden';
+}
+function hide() {
+    document.getElementById('bild').style.visibility='hidden';
+    document.getElementById('map').style.visibility='visible';
+}
+</script>
+<meta name="viewport" content="width=320, user-scalable=yes">
+</head>
+<body onload="init()">
+<div id="grrlogos" style="position:absolute; top:0px; left:0px; z-index:3;"><a href="../index.html"><img id="grrrrnet" src="../grr/grrrrnetn.png" border="0" alt="GRRRRnet"></a><IMG SRC="../grr/grrrr_flugi.png" border="0">
+</div>
+<div id="map" style="z-index:1;"></div>
+<div id="bild" style="z-index:2;" onclick="hide(); return false;"></div>
+</body>
+
+</html>
+
